@@ -1,5 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Hello {{name}} !!</h1>
+
+    <form action="online_quiz" method="GET">
+        <!-- <div> -->
+            <label for="quiz_category">Category: </label>
+            <select name="quiz_category" id="" required>
+                <option selected disabled>choose one category..</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.category_id }}">{{ cat.category_id }} : {{ cat.category_name }}</option>
+                {% endfor %}
+            </select>
+        <!-- </div> -->
+
+        <!-- <div> -->
+            <label for="quiz_difficulty">Difficulty: </label>
+            <select name="quiz_difficulty" id="" required>
+                <option selected disabled>Choose the difficulty</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        <!-- </div> -->
+
+        <label for="">No. of Questions: </label>
+        <input type="text" placeholder="10" disabled>
+
+        <label for="">Type: </label>
+        <input type="text" placeholder="Multiple Choice" disabled>
+
+        <!-- <p>No. of Questions: <span> 10 </span></p>
+        <p>Type: <span> Multiple Choice </span></p> -->
+
+        <button type="submit">Button</button>
+    </form>
+
+    <hr>
+    {% if quiz_questions|length > 0 %}
+         {% for q in quiz_questions %}
+            <h1>Question: {{q.question}}</h1>
+            <h2>Answer: {{q.correct_answer}}</h2>
+            <hr>
+        {% endfor %}
+    {% endif %}
 {% endblock %}
