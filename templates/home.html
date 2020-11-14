@@ -2,10 +2,11 @@
 
 {% block content %}
 
-    <form action="online_quiz" method="GET">
+    <form action="" method="POST">
+        {% csrf_token %}
         <!-- <div> -->
             <label for="quiz_category">Category: </label>
-            <select name="quiz_category" id="" required>
+            <select name="quiz_category" id="" requfired>
                 <option selected disabled>choose one category..</option>
                 {% for cat in categories %}
                     <option value="{{ cat.category_id }}">{{ cat.category_id }} : {{ cat.category_name }}</option>
@@ -35,12 +36,8 @@
         <button type="submit">Button</button>
     </form>
 
-    <hr>
-    {% if quiz_questions|length > 0 %}
-         {% for q in quiz_questions %}
-            <h1>Question: {{q.question}}</h1>
-            <h2>Answer: {{q.correct_answer}}</h2>
-            <hr>
-        {% endfor %}
-    {% endif %}
+    {% for i in school_quiz %}
+   <a href='{{i.get_absolute_url}}'>{{i.quiz_difficulty}}</a> 
+    {% endfor %}
+
 {% endblock %}

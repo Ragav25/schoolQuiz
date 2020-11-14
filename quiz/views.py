@@ -3,6 +3,7 @@ import json
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core import serializers
+from .models import Quizzes
 
 
 # Create your views here.
@@ -27,17 +28,43 @@ def home(request):
 
         categories.append(category)
 
-    # QUIZ QUESTION URL
+    # Adding to Database
+    if request.method == 'POST':
+        quiz_category = request.POST.get('quiz_category', False)
+        quiz_difficulty = request.POST.get('quiz_difficulty', False)
+
+        create_quiz = Quizzes.objects.create(
+            quiz_category=quiz_category, quiz_difficulty=quiz_difficulty)
+        create_quiz.save()
+
+    school_quiz = Quizzes.objects.all()
+
+    context = {
+        'categories': categories,
+        'school_quiz': school_quiz
+    }
+
+    return render(request, 'home.html', context)
+
+
+def quiz_questions(request, quiz_category, quiz_difficulty, id):
+
+    # obj = Quizzes.objects.get(
+    #     quiz_category=quiz_category, quiz_difficulty=q_difficulty)
+
     url = 'https://opentdb.com/api.php?amount=10&category={q_category}&difficulty={q_difficulty}&type=multiple'
 
-    quiz_questions = []
+    # quiz_category = request.GET.get('quiz_category')
+    # quiz_difficulty = request.GET.get('quiz_difficulty')
 
-    quiz_category = request.GET.get('quiz_category')
-    quiz_difficulty = request.GET.get('quiz_difficulty')
+    # quiz_category = request.POST.get('quiz_category', False)
+    # quiz_difficulty = request.POST.get('quiz_difficulty', False)
 
     if queryparam_vaild(quiz_category) and queryparam_vaild(quiz_difficulty):
         r = requests.get(url.format(q_category=quiz_category,
                                     q_difficulty=quiz_difficulty)).json()
+
+        quiz_questions = []
 
         for q in r['results']:
             questions = {
@@ -48,9 +75,9 @@ def home(request):
 
             quiz_questions.append(questions)
 
-    context = {
-        'quiz_questions': quiz_questions,
-        'categories': categories
-    }
+        context = {
+            'quiz_questions': quiz_questions,
+            # 'obj': obj
+        }
 
-    return render(request, 'home.html', context)
+    return render(request, 'quiz_questions.html', context)

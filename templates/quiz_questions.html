@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if quiz_questions|length > 0 %}
+         {% for q in quiz_questions %}
+            <h1>Question: {{q.question}}</h1>
+            <h2>Answer: {{q.correct_answer}}</h2>
+            <hr>
+        {% endfor %}
+        {% else %}
+        <h4>No Questions Available</h4>
+    {% endif %}
+
+{% endblock %}
